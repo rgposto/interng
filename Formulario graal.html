@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferramentas Microsoft — Graal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F0F4F8;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .form-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+
+  .form-header {
+    background: linear-gradient(135deg, #0078D4 0%, #005A9E 100%);
+    padding: 2rem 2rem 1.75rem;
+    position: relative;
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-text {
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .form-header h1 {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .form-header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+  }
+
+  .form-body {
+    padding: 1.75rem 2rem 2rem;
+  }
+
+  .intro {
+    font-size: 14px;
+    color: #5A6473;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #EEF0F3;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A95A3;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .tool-row {
+    border: 1px solid #EEF0F3;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .tool-row.has-selection {
+    border-color: #C8DEFF;
+    background: #FAFCFF;
+  }
+
+  .tool-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .tool-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .tool-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1A202C;
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: #8A95A3;
+    margin-top: 1px;
+  }
+
+  .scale-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .scale-btn {
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 8px 4px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    color: #8A95A3;
+    background: #F8FAFC;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .scale-btn:hover {
+    border-color: #0078D4;
+    color: #0078D4;
+    background: #EBF4FF;
+  }
+
+  .scale-btn.sel-muito {
+    background: #ECFDF5;
+    border-color: #059669;
+    color: #065F46;
+    font-weight: 600;
+  }
+
+  .scale-btn.sel-vezes {
+    background: #EFF6FF;
+    border-color: #2563EB;
+    color: #1E40AF;
+    font-weight: 600;
+  }
+
+  .scale-btn.sel-pouco {
+    background: #FFFBEB;
+    border-color: #D97706;
+    color: #92400E;
+    font-weight: 600;
+  }
+
+  .scale-btn.sel-nunca {
+    background: #F3F4F6;
+    border-color: #9CA3AF;
+    color: #374151;
+    font-weight: 600;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #EEF0F3;
+    margin: 1.5rem 0;
+  }
+
+  .obs-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8A95A3;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  textarea, .text-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 11px 14px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    background: #F8FAFC;
+    color: #1A202C;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  textarea:focus, .text-input:focus {
+    border-color: #0078D4;
+    box-shadow: 0 0 0 3px rgba(0,120,212,0.12);
+    background: #fff;
+  }
+
+  textarea::placeholder, .text-input::placeholder {
+    color: #B0BAC9;
+  }
+
+  .field-group {
+    margin-bottom: 12px;
+  }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5A6473;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .field-required {
+    color: #E53E3E;
+    font-size: 12px;
+  }
+
+  .id-card {
+    background: #F8FAFC;
+    border: 1px solid #EEF0F3;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 1.5rem;
+  }
+
+  .id-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 480px) {
+    .id-grid { grid-template-columns: 1fr; }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: #0078D4;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1.25rem;
+    transition: background 0.2s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+
+  .submit-btn:hover { background: #006CBD; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: #A0B4C8; cursor: not-allowed; }
+
+  .footer-note {
+    font-size: 11px;
+    color: #B0BAC9;
+    text-align: center;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .legend-item {
+    font-size: 11px;
+    color: #8A95A3;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .toast {
+    display: none;
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1A202C;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .toast.show { display: block; animation: fadeInUp 0.3s ease; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 1rem 0.75rem; }
+    .form-body { padding: 1.25rem 1.25rem 1.5rem; }
+    .form-header { padding: 1.5rem 1.25rem; }
+    .scale-btn { font-size: 11px; padding: 7px 2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-card">
+  <div class="form-header">
+    <div class="header-logo">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="2" width="7" height="7" rx="1.5" fill="white"/>
+          <rect x="11" y="2" width="7" height="7" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="2" y="11" width="7" height="7" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="11" y="11" width="7" height="7" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+        </svg>
+      </div>
+      <span class="logo-text">Graal</span>
+    </div>
+    <h1>Levantamento de Ferramentas Microsoft</h1>
+    <p>Pesquisa interna · Respostas confidenciais</p>
+  </div>
+
+  <div class="form-body">
+    <p class="intro">
+      Informe com qual frequência você utiliza cada ferramenta da Microsoft no seu dia a dia.
+      Suas respostas nos ajudarão a identificar necessidades de suporte e capacitação.
+    </p>
+
+    <p class="section-label">Identificação</p>
+    <div class="id-card">
+      <div class="id-grid">
+        <div class="field-group">
+          <div class="field-label">Nome completo <span class="field-required">*</span></div>
+          <input type="text" id="nome" class="text-input" placeholder="Seu nome" autocomplete="name" />
+        </div>
+        <div class="field-group">
+          <div class="field-label">E-mail corporativo <span class="field-required">*</span></div>
+          <input type="email" id="email-resp" class="text-input" placeholder="nome@graal.com.br" autocomplete="email" />
+        </div>
+      </div>
+    </div>
+
+    <p class="section-label">Grau de uso por ferramenta</p>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#059669"></span>Muito</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#2563EB"></span>Às vezes</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#D97706"></span>Pouco</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#9CA3AF"></span>Nunca</span>
+    </div>
+
+    <div class="tool-row" id="row-excel">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#1D6F42;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="rgba(255,255,255,0.15)"/>
+            <path d="M7 8l3 4-3 4M13 16h4M13 12h4M13 8h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="tool-name">Excel</div>
+          <div class="tool-desc">Planilhas e análise de dados</div>
+        </div>
+      </div>
+      <div class="scale-options" id="excel">
+        <div class="scale-btn" onclick="select('excel','muito',this)">Muito</div>
+        <div class="scale-btn" onclick="select('excel','vezes',this)">Às vezes</div>
+        <div class="scale-btn" onclick="select('excel','pouco',this)">Pouco</div>
+        <div class="scale-btn" onclick="select('excel','nunca',this)">Nunca</div>
+      </div>
+    </div>
+
+    <div class="tool-row" id="row-word">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#2B579A;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="rgba(255,255,255,0.15)"/>
+            <path d="M7 8h10M7 12h7M7 16h10" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="tool-name">Word</div>
+          <div class="tool-desc">Documentos e textos</div>
+        </div>
+      </div>
+      <div class="scale-options" id="word">
+        <div class="scale-btn" onclick="select('word','muito',this)">Muito</div>
+        <div class="scale-btn" onclick="select('word','vezes',this)">Às vezes</div>
+        <div class="scale-btn" onclick="select('word','pouco',this)">Pouco</div>
+        <div class="scale-btn" onclick="select('word','nunca',this)">Nunca</div>
+      </div>
+    </div>
+
+    <div class="tool-row" id="row-ppt">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#B7472A;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="rgba(255,255,255,0.15)"/>
+            <rect x="6" y="7" width="12" height="8" rx="1.5" stroke="#fff" stroke-width="1.5"/>
+            <path d="M10 19h4M12 15v4" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="tool-name">PowerPoint</div>
+          <div class="tool-desc">Apresentações e slides</div>
+        </div>
+      </div>
+      <div class="scale-options" id="ppt">
+        <div class="scale-btn" onclick="select('ppt','muito',this)">Muito</div>
+        <div class="scale-btn" onclick="select('ppt','vezes',this)">Às vezes</div>
+        <div class="scale-btn" onclick="select('ppt','pouco',this)">Pouco</div>
+        <div class="scale-btn" onclick="select('ppt','nunca',this)">Nunca</div>
+      </div>
+    </div>
+
+    <div class="tool-row" id="row-onedrive">
+      <div class="tool-header">
+        <div class="tool-icon" style="background:#0078D4;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M5 15.5C3.3 15.5 2 14.2 2 12.5c0-1.4 1-2.6 2.3-2.9C4.5 7.5 6.3 6 8.5 6c1.4 0 2.7.6 3.5 1.6C12.5 7.2 13.2 7 14 7c2.2 0 4 1.8 4 4 0 .2 0 .3 0 .5C19.1 11.9 20 13 20 14.3c0 1.5-1.3 2.7-2.8 2.7H5z" stroke="#fff" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="tool-name">OneDrive</div>
+          <div class="tool-desc">Armazenamento em nuvem</div>
+        </div>
+      </div>
+      <div class="scale-options" id="onedrive">
+        <div class="scale-btn" onclick="select('onedrive','muito',this)">Muito</div>
+        <div class="scale-btn" onclick="select('onedrive','vezes',this)">Às vezes</div>
+        <div class="scale-btn" onclick="select('onedrive','pouco',this)">Pouco</div>
+        <div class="scale-btn" onclick="select('onedrive','nunca',this)">Nunca</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <p class="obs-label">Observações <span style="font-weight:400;font-size:10px;color:#B0BAC9;">(opcional)</span></p>
+    <textarea id="obs" placeholder="Comentários sobre o uso das ferramentas, dificuldades encontradas ou sugestões de melhoria..."></textarea>
+
+    <button class="submit-btn" id="submitBtn" onclick="enviar()">Enviar respostas</button>
+
+    <p class="footer-note">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1a4 4 0 0 0-4 4v2H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V5a4 4 0 0 0-4-4zm3 6H5V5a3 3 0 1 1 6 0v2z" fill="#B0BAC9"/></svg>
+      Suas respostas são confidenciais e visíveis apenas para o administrador
+    </p>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Respostas enviadas com sucesso!</div>
+
+<script>
+  const selections = {};
+
+  function select(tool, level, el) {
+    const group = document.getElementById(tool);
+    group.querySelectorAll('.scale-btn').forEach(b => { b.className = 'scale-btn'; });
+    el.classList.add('sel-' + level);
+    selections[tool] = level;
+    const row = document.getElementById('row-' + tool);
+    if (row) row.classList.add('has-selection');
+  }
+
+  function enviar() {
+    const nome = document.getElementById('nome').value.trim();
+    const emailResp = document.getElementById('email-resp').value.trim();
+    const tools = ['excel','word','ppt','onedrive'];
+    const names = { excel: 'Excel', word: 'Word', ppt: 'PowerPoint', onedrive: 'OneDrive' };
+    const labels = { muito: 'Muito', vezes: 'Às vezes', pouco: 'Pouco', nunca: 'Nunca' };
+
+    if (!nome) { alert('Por favor, informe seu nome completo.'); document.getElementById('nome').focus(); return; }
+    if (!emailResp || !emailResp.includes('@')) { alert('Por favor, informe um e-mail válido.'); document.getElementById('email-resp').focus(); return; }
+
+    const missing = tools.filter(t => !selections[t]);
+    if (missing.length > 0) {
+      alert('Por favor, selecione o grau de uso para: ' + missing.map(t => names[t]).join(', '));
+      return;
+    }
+
+    const obs = document.getElementById('obs').value.trim();
+
+    let body = 'Respostas do formulário — Ferramentas Microsoft (Graal)\n';
+    body += '='.repeat(50) + '\n\n';
+    body += 'COLABORADOR\n';
+    body += 'Nome:  ' + nome + '\n';
+    body += 'Email: ' + emailResp + '\n\n';
+    body += 'GRAU DE USO\n';
+    tools.forEach(t => { body += names[t] + ': ' + labels[selections[t]] + '\n'; });
+    if (obs) { body += '\nOBSERVAÇÕES\n' + obs; }
+
+    const email = 'thais.piraja@redegraal.com.br';
+    const subject = encodeURIComponent('Resposta — Ferramentas Microsoft Graal | ' + nome);
+    const bodyEnc = encodeURIComponent(body);
+
+    window.location.href = `mailto:${email}?subject=${subject}&body=${bodyEnc}`;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Enviado ✓';
+
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+</script>
+
+</body>
+</html>
